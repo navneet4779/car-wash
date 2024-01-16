@@ -76,6 +76,10 @@ img {
     color: white;
 }
 
+.image-container{
+position:relative;
+}
+
 .motto {
     position: absolute;
     top: 35%;
@@ -90,7 +94,8 @@ img {
 }
 
 .about-header{
-    margin-left: 45%;
+    position: relative;
+    text-align: center;
 }
 
 .about-content {
