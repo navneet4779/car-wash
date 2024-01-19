@@ -5,15 +5,13 @@ import re
 import config
 
 app = Flask(__name__)
-app.secret_key = '12345'
+app.secret_key = config.secret_key
 connection = pymysql.connect(user=config.user, password='', host=config.host, database=config.database)
 cursor = connection.cursor(pymysql.cursors.DictCursor)
-
-
 # print(cursor)
 
 
-@app.route('/')
+@app.route('/home')
 def home():
     return render_template('home.html')
 
@@ -28,7 +26,7 @@ def service():
     return render_template('service.html')
 
 
-@app.route('/membership', methods=['GET', 'POST'])
+@app.route('/memberships', methods=['GET', 'POST'])
 def membership():
     if request.method == "POST":
         firstname = request.form['firstname']
@@ -127,11 +125,9 @@ def login():
             session['logged'] = True
             session['id'] = account['id']
             #   print(account[0])
-            #    exit()
             session['username'] = account['username']
-            account = session['username']
             #  flash("Logged in with success!")
-            return render_template('employee.html', account=session['username'])
+            return render_template('employee.html')
         else:
             flash('Wrong username/password! Please, check your credentials!')
     return render_template('login.html')
@@ -181,6 +177,8 @@ def employee_support_center_ticket_details(id):
         return '<h1>NOT AUTHORIZED!</h1>'
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
+    website_url = 'naivete_carWash.in'
+    app.config['SERVER_NAME'] = website_url
+    app.run(debug=True)
 
-app.run(host='0.0.0.0', debug=True)
