@@ -11,7 +11,7 @@ cursor = connection.cursor(pymysql.cursors.DictCursor)
 # print(cursor)
 
 
-@app.route('/home')
+@app.route('/')
 def home():
     return render_template('home.html')
 
@@ -178,7 +178,5 @@ def employee_support_center_ticket_details(id):
 
 
 if __name__ == '__main__':
-    website_url = 'naivete_carWash.in'
-    app.config['SERVER_NAME'] = website_url
     app.run(debug=True)
 
