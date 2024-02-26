@@ -79,7 +79,7 @@ def reservation():
         carmake = request.form['carmake']
         cartype = request.form['cartype']
         regnumber = request.form['regnumber']
-        branch = request.form['branch']
+        branch1 = request.form.get('branch', 'Sandana')
         service = request.form['service']
         date = request.form['date']
         time = request.form['time']
@@ -88,8 +88,8 @@ def reservation():
         elif re.match(r'\D', phone):
             flash('Wrong phone number')
         else:
-            cursor.execute("INSERT INTO reservations VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (
-                firstname, lastname, email, phone, carmake, cartype, regnumber, branch, service, date, time))
+            cursor.execute("INSERT INTO reservations(firstname, lastname, email, phone, carmake, cartype, regnumber, branch, service, date, time) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (
+                firstname, lastname, email, phone, carmake, cartype, regnumber, branch1, service, date, time))
             connection.commit()
             flash("Order placed with Success!")
     return render_template("reservations.html", current_day=current_day)
