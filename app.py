@@ -45,7 +45,7 @@ def membership():
             flash('Wrong phone number')
         else:
             cursor.execute(
-                "INSERT INTO membership(firstname, lastname, email, phone, address, city, postalcod, country, offer, gender) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                "INSERT INTO membership1(firstname, lastname, email, phone, address, city, postalcod, country, offer, gender) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
                 (firstname, lastname, email, phone, address, city, postalcod, country, offer, gender))
             connection.commit()
     return render_template("membership.html")
@@ -108,7 +108,7 @@ def contact():
             flash("Wrong email address!")
         else:
             cursor.execute(
-                "INSERT INTO contact(firstname, lastname, email, phone, message) VALUES (%s, %s, %s, %s, %s)",
+                "INSERT INTO contact1(firstname, lastname, email, phone, message) VALUES (%s, %s, %s, %s, %s)",
                 (firstname, lastname, email, phone, message))
             connection.commit()
     return render_template("contact.html")
