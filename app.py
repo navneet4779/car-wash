@@ -8,6 +8,8 @@ app = Flask(__name__)
 app.secret_key = config.secret_key
 connection = pymysql.connect(user=config.user, password='', host=config.host, database=config.database)
 cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+
 # print(cursor)
 
 
@@ -88,8 +90,10 @@ def reservation():
         elif re.match(r'\D', phone):
             flash('Wrong phone number')
         else:
-            cursor.execute("INSERT INTO reservations(firstname, lastname, email, phone, carmake, cartype, regnumber, branch, service, date, time) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (
-                firstname, lastname, email, phone, carmake, cartype, regnumber, branch1, service, date, time))
+            cursor.execute(
+                "INSERT INTO reservations(firstname, lastname, email, phone, carmake, cartype, regnumber, branch, service, date) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                (
+                    firstname, lastname, email, phone, carmake, cartype, regnumber, branch1, service, date, time))
             connection.commit()
             flash("Order placed with Success!")
     return render_template("reservations.html", current_day=current_day)
@@ -119,7 +123,7 @@ def login():
     if request.method == "POST" and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
         password = request.form['password']
-        cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
+        cursor.execute("SELECT * FROM users1 WHERE username = %s AND password = %s", (username, password))
         account = cursor.fetchone()
         if account:
             session['logged'] = True
@@ -150,7 +154,7 @@ def logout():
 @app.route('/employee/members')
 def employee_members():
     if 'logged' in session:
-        cursor.execute("SELECT id, firstname, lastname,offer FROM membership ORDER BY id ASC")
+        cursor.execute("SELECT id, firstname, lastname,offer FROM membership1 ORDER BY id ASC")
         member_list = cursor.fetchall()
         return render_template('employee-members.html', member_list=member_list)
     else:
@@ -160,7 +164,7 @@ def employee_members():
 @app.route('/employee/support_center')
 def employee_support_center():
     if 'logged' in session:
-        cursor.execute("SELECT id, firstname, lastname FROM contact ORDER BY id DESC")
+        cursor.execute("SELECT id, firstname, lastname FROM contact1 ORDER BY id DESC")
         ticket_list = cursor.fetchall()
         return render_template('employee-support-center.html', ticket_list=ticket_list)
     else:
@@ -170,13 +174,42 @@ def employee_support_center():
 @app.route('/employee/support_center/<int:id>')
 def employee_support_center_ticket_details(id):
     if 'logged' in session:
-        cursor.execute("SELECT * FROM contact WHERE id = %s", id)
+        cursor.execute("SELECT * FROM contact1 WHERE id = %s", id)
         ticket = cursor.fetchone()
         return render_template('support_ticket.html', ticket=ticket)
     else:
         return '<h1>NOT AUTHORIZED!</h1>'
 
 
+@app.route('/employee/reservations/<int:id>')
+def employee_reservations_detailed(id):
+    if 'logged' in session:
+        cursor.execute("SELECT * FROM reservations WHERE id = %s", id)
+        customer = cursor.fetchone()
+        return render_template('reservation_details.html', customer=customer)
+    else:
+        return '<h1>NOT AUTHORIZED!</h1>'
+
+
+@app.route('/employee/support_center/<int:id>/delete')
+def employee_support_center_ticket_delete(id):
+    if 'logged' in session:
+        cursor.execute("DELETE FROM contact1 WHERE id = %s", id)
+        cursor.connection.commit()
+        return redirect(url_for('employee_support_center'))
+    else:
+        return '<h1>NOT AUTHORIZED!</h1>'
+
+
+@app.route('/employee/reservations')
+def employee_reservations():
+    if 'logged' in session:
+        cursor.execute("SELECT id,firstname,lastname,carmake,regnumber FROM reservations ORDER BY id DESC")
+        reservations_list = cursor.fetchall()
+        return render_template('employee-reservations.html', reservations_list=reservations_list)
+    else:
+        return '<h1>NOT AUTHORIZED!</h1>'
+
+
 if __name__ == '__main__':
     app.run(debug=True)
-

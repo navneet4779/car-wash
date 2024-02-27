@@ -1,0 +1,47 @@
+{% extends 'base_admin_interface.html' %}
+
+{% block title %} Reservation Details {% endblock %}
+
+
+{% block content %}
+
+
+<div class="reservation_details">
+  <table class="styled-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Car Make</th>
+        <th>Car Type</th>
+        <th>Reg. Nr.</th>
+        <th>Branch</th>
+        <th>Service</th>
+        <th>Schedule Date</th>
+        <th>Added Time</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{customer['id']}}</td>
+        <td>{{customer['firstname']}}</td>
+        <td>{{customer['lastname']}}</td>
+        <td>{{customer['email']}}</td>
+        <td>{{customer['phone']}}</td>
+        <td>{{customer['carmake']}}</td>
+        <td>{{customer['cartype']}}</td>
+        <td>{{customer['regnr']}}</td>
+        <td>{{customer['branch']}}</td>
+        <td>{{customer['service']}}</td>
+        <td>{{customer['date']}}</td>
+        <td>{{customer['time']}}</td>
+        <td><button class="delete-button"><a href="/employee/reservations/{{customer['id']}}/delete">Delete</a></button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}
